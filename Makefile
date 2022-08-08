@@ -29,8 +29,8 @@ opa:
 	@cd "$(Opa_Lib_Path)" && go build -o $(Opa_Name) -buildmode=c-shared $(Opa_Src_Files)
 
 build_rats_tls:
-	if [ ! -d "$(RatsTls_Src_Dir)" ]; then git clone https://github.com/inclavare-containers/rats-tls.git; fi
-	cd "$(RatsTls_Src_Dir)" && cmake -DBUILD_SAMPLES=on -H. -Bbuild && make -C build install
+	if [ ! -d "$(RatsTls_Src_Dir)" ]; then git clone -b 2022-poc https://github.com/jialez0/rats-tls.git; fi
+	cd "$(RatsTls_Src_Dir)" && cmake -DRATS_TLS_BUILD_MODE="tdx" -DBUILD_SAMPLES=on -H. -Bbuild && make -C build install
 
 $(Eaa_Name): opa build_rats_tls
 	RUSTFLAGS="-C link-args=-Wl,-rpath=/usr/local/lib/rats-tls:/usr/local/lib:$(Opa_Lib_Path),--enable-new-dtags" cargo build $(App_Rust_Flags)
